@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 
 class TestCase(unittest.TestCase):
     def test_connection(self):
-        response = requests.post('http://127.0.0.1:5000/add',data={'expression':'2+2'})
+        r = requests.post('http://127.0.0.1:5000/add',data={'expression':'2+2'})
         self.assertEqual(r.status_code, 200)
 
     def test_post(self):
@@ -18,7 +18,7 @@ class TestCase(unittest.TestCase):
         self.assertNotEqual(len(rows), 0)
 
     def test_err(self):
-        response = requests.post('http://127.0.0.1:5000/add', data={'expression':'2/0'})
+        r = requests.post('http://127.0.0.1:5000/add', data={'expression':'2/0'})
         self.assertNotEqual(r.status_code, 200)
 
     def test_db(self):
