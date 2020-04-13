@@ -30,7 +30,7 @@ class TestCase(unittest.TestCase):
 
         lastId = rows[0][0]
         with engine.connect() as con:
-            rs2 = con.execute("SELECT * FROM Expression WHERE id > lastId")
+            rs2 = con.execute("SELECT * FROM Expression WHERE id >" + lastId)
             rows2 = rs.fetchall()
         self.assertEqual(len(rows2), 0)
 
