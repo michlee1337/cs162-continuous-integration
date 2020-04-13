@@ -2,7 +2,6 @@
 import requests
 import psycopg2
 import unittest
-@classmethod
 
 class TestCase(unittest.TestCase):
     def setUp(self):
