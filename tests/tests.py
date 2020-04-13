@@ -1,11 +1,10 @@
-
 import requests
 import psycopg2
 import unittest
 
 connection = psycopg2.connect(user="cs162_user",
                                   password="cs162_password",
-                                  host="localhost",
+                                  host="127.0.0.1",
                                   port="5432",
                                   database="cs162")
 cursor = connection.cursor()
