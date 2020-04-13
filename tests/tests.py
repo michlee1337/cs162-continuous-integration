@@ -1,25 +1,41 @@
-#because my own tests was not working and writing tests is not central to this
-#assignment, the tests here are made up
 
+import requests
+import psycopg2
 import unittest
-
+@classmethod
 
 class TestCase(unittest.TestCase):
+    def setUp(self):
+        connection = psycopg2.connect(user="cs162_user",
+                                          password="cs162_password",
+                                          host="localhost",
+                                          port="5432",
+                                          database="cs162")
+        self.connection = connection.cursor()
+        self.endpoint = 'http://127.0.0.1:5000/add'
+
 
     def test_connection(self):
-        #response = requests.get('http://localhost:5000')
-        self.assertEqual(200, 200) #test doesn't work but we are checking continuous integration #response.status_code)
+        response = requests.post(self.endpoint ,data={'expression':'2+2'})
+        assert response.status_code == 200
 
     def test_post(self):
-        #response = requests.post('http://localhost:5000/add', data={'expression':'1+1'})
-        self.assertEqual(200, 200)#test doesn't work but we are checking continuous integration response.status_code)
+        self.connection.execute("SELECT * FROM Expression WHERE text='2+2' LIMIT 1")
+        es = self.connection.fetchall()
+        assert es is not None
+        assert es[0] is not None
+        assert es[0][2] == 4
 
     def test_err(self):
-        #response = requests.post('http://localhost:5000/add', data={'expressions':'1+1'})
-        self.assertEqual(400, 400)#test doesn't work but we are checking continuous integration response.status_code)
+        response = requests.post(self.endpoint, data={'expression':'2/0'})
+        assert response.status_code == 500
 
     def test_db(self):
-        self.assertEqual(400, 400)#test doesn't work but we are checking continuous integration response.status_code)
+        self.connection.execute("SELECT * FROM Expression ORDER BY id DESC LIMIT 1")
+        es = self.connection.fetchall()
+        assert es is not None
+        assert es[0] is not None
+        assert es[0][1] == '2+2'
 
 if __name__ == '__main__':
     unittest.main()
